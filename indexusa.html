@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <style>
+    .sec1{
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      min-height: 100vh;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+    }</style>
+  <title>Search USA Zip Code</title>
+</head>
+<body>
+  <div class="sec1 position-relative">
+    <div class="container">
+      <div class="position-absolute top-0 end-0">
+        <div class="row p-4">
+          <a href="index.html" class="btn btn-primary">Japan</a>
+        </div>
+      </div>
+      <div class="row">
+        <h1 class="dark text-center">Search Zip codes for USA</h1>
+      </div>
+      <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+          <form class="my-2">
+            <div class="">
+              <label for="zip" class="form-label">Zip</label>
+              <input type="text" class="form-control" id="zip" placeholder="zip">
+            </div>
+            <div class="my-2">
+              <label for="city" class="form-label">city</label>
+              <input type="text" class="form-control" id="city" placeholder="city">
+            </div>
+            <div class="my-2">
+              <label for="state" class="form-label">state</label>
+              <input type="text" class="form-control" id="state" placeholder="state">
+            </div>
+            <div class="my-2">
+              <button type="submit" class="btn btn-primary">submit</button>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-3"></div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script>
+    $(function() {
+      // OnKeyDown Function
+      $("#zip").keyup(function() {
+        var zip_in = $(this);
+        var zip_box = $('#zipbox');
+        if (zip_in.val().length<5) {
+          zip_box.removeClass('error success');
+        }
+        else if ( zip_in.val().length>5) {
+          zip_box.addClass('error').removeClass('success');
+        }
+        else if ((zip_in.val().length == 5) ) {
+          // Make HTTP Request
+          $.ajax({
+            url: "https://api.zippopotam.us/us/" + zip_in.val(),
+            cache: false,
+            dataType: "json",
+            type: "GET",
+            success: function(result, success) {
+              // US Zip Code Records Officially Map to only 1 Primary Location
+              places = result['places'][0];
+              $("#city").val(places['place name']);
+              $("#state").val(places['state']);
+              zip_box.addClass('success').removeClass('error');
+            },
+            error: function(result, success) {
+              zip_box.removeClass('success').addClass('error');
+            }
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
